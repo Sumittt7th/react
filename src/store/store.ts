@@ -1,12 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import authReducer from "./reducers/authReducer";
-import { api } from "../services/api";
+import { api } from "../services/auth.api";
+import videoReducer from "./reducers/videoReducer";
+import {apiVideo} from "../services/video.api"
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     [api.reducerPath]: api.reducer,
+    video: videoReducer,
+    [apiVideo.reducerPath]: apiVideo.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),

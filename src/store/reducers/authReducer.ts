@@ -7,6 +7,8 @@ interface AuthState {
   refreshToken: string;
   isAuthenticated: boolean;
   loading: boolean;
+  role: string | ""; 
+  user: {} ;
 }
 
 // Define the initial state using that type
@@ -15,6 +17,8 @@ const initialState: AuthState = {
   refreshToken: "",
   isAuthenticated: false,
   loading: true,
+  role: "",
+  user: {},
 };
 
 export const authSlice = createSlice({
@@ -26,16 +30,20 @@ export const authSlice = createSlice({
     },
     setTokens: (
       state,
-      action: PayloadAction<{ accessToken: string; refreshToken: string }>
+      action: PayloadAction<{ accessToken: string; refreshToken: string; role: string; user: {} }>
     ) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
+      state.role = action.payload.role;
+      state.user = action.payload.user;  // Save role as well
       state.isAuthenticated = true;
     },
     resetTokens: (state) => {
       state.accessToken = "";
       state.refreshToken = "";
       state.isAuthenticated = false;
+      state.role="";
+      state.user={};
     },
   },
 });
