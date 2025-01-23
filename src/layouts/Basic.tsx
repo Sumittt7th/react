@@ -8,7 +8,7 @@ const useStyle = (theme: Theme) => createStyles({
     height: '100vh',
     width: '100vw',
     [theme.breakpoints.up('md')]: {
-      backgroundColor: 'lightblue',
+      backgroundColor: 'lightgreen',
     },
   },
 });
