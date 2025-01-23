@@ -4,7 +4,7 @@ import { createStyles } from "@mui/styles";
 
 const useStyle = (theme: Theme) => createStyles({
   root: {
-    backgroundColor: "lightgrey",
+    backgroundColor: "lightblue",
     height: '100vh',
     width: '100vw',
     [theme.breakpoints.up('md')]: {
