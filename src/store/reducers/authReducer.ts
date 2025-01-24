@@ -7,18 +7,18 @@ interface AuthState {
   refreshToken: string;
   isAuthenticated: boolean;
   loading: boolean;
-  role: string | ""; 
-  user: {} ;
+  role: string | "";
+  user: {};
 }
 
 // Define the initial state using that type
 const initialState: AuthState = {
-  accessToken: "",
-  refreshToken: "",
-  isAuthenticated: false,
+  accessToken: localStorage.getItem("accessToken") || "",
+  refreshToken: localStorage.getItem("refreshToken") || "",
+  isAuthenticated: !!localStorage.getItem("accessToken"), // Check if accessToken exists in localStorage
   loading: true,
-  role: "",
-  user: {},
+  role: localStorage.getItem("role") || "",
+  user: JSON.parse(localStorage.getItem("user") || "{}"), // Retrieve user data from localStorage
 };
 
 export const authSlice = createSlice({
@@ -30,20 +30,35 @@ export const authSlice = createSlice({
     },
     setTokens: (
       state,
-      action: PayloadAction<{ accessToken: string; refreshToken: string; role: string; user: {} }>
+      action: PayloadAction<{
+        accessToken: string;
+        refreshToken: string;
+        role: string;
+        user: {};
+      }>
     ) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.role = action.payload.role;
-      state.user = action.payload.user;  // Save role as well
+      state.user = action.payload.user;
       state.isAuthenticated = true;
+      // Persist data in localStorage
+      localStorage.setItem("accessToken", action.payload.accessToken);
+      localStorage.setItem("refreshToken", action.payload.refreshToken);
+      localStorage.setItem("role", action.payload.role);
+      localStorage.setItem("user", JSON.stringify(action.payload.user));
     },
     resetTokens: (state) => {
       state.accessToken = "";
       state.refreshToken = "";
       state.isAuthenticated = false;
-      state.role="";
-      state.user={};
+      state.role = "";
+      state.user = {};
+      // Remove data from localStorage
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("role");
+      localStorage.removeItem("user");
     },
   },
 });

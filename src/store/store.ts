@@ -13,8 +13,9 @@ export const store = configureStore({
     [apiVideo.reducerPath]: apiVideo.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(api.middleware),
+    getDefaultMiddleware().concat(api.middleware,apiVideo.middleware),
 });
+
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

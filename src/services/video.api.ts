@@ -1,71 +1,60 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAccessToken } from '../utils/auth';
+import { getAccessToken } from "../utils/auth";
 
-// Define a type for your video
-interface Video {
+export interface IVideo {
   _id: string;
   title: string;
-  description?: string;
-  url: string;
-  hlsUrl?: string;
-  duration?: number;
   access: "free" | "paid";
-  viewCount: number;
-  public_id?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  description?: string;
+  duration?: number | null;
+  url?: string;
+  public_id?:string;
+  hlsUrl?: string;
+  viewCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
-// Create a new API instance using RTK query
+
 export const apiVideo = createApi({
   reducerPath: "videoApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api/", // Your backend URL
+    baseUrl: "http://localhost:5000/api", // Update with your backend URL
     prepareHeaders: (headers) => {
-      const token = getAccessToken(); // Get token from localStorage
+      const token = getAccessToken(); // Retrieve token
       if (token) {
-        headers.set("Authorization", `Bearer ${token}`); // Add token to Authorization header
+        headers.set("Authorization", `Bearer ${token}`);
       }
       return headers;
     },
   }),
   endpoints: (builder) => ({
-    // Fetch all videos
-    fetchVideos: builder.query<Video[], void>({
-      query: () => "videos",
-    }),
+    uploadVideo: builder.mutation<any, { data: IVideo; file: File }>({
+      query: ({ data, file }) => {
+        const formData = new FormData();
+        formData.append("title", data.title);
+        formData.append("description", data.description || "");
+        formData.append("access", data.access);
+        formData.append(
+          "duration",
+          data.duration ? data.duration.toString() : ""
+        );
+        formData.append("video", file);
 
-    // Fetch a single video by ID
-    fetchVideoById: builder.query<Video, string>({
-      query: (id) => `videos/${id}`,
+        return {
+          url: "/videos",
+          method: "POST",
+          body: formData,
+        };
+      },
     }),
-
-    // Add a new video
-    addVideo: builder.mutation<Video, Partial<Video>>({
-      query: (video) => ({
-        url: "videos",
-        method: "POST",
-        body: video,
-      }),
-    }),
-
-    // Update an existing video
-    updateVideo: builder.mutation<Video, { _id: string; video: Partial<Video> }>({
-      query: ({ _id, video }) => ({
-        url: `videos/${_id}`,
-        method: "PUT",
-        body: video,
-      }),
-    }),
-
-    // Delete a video by ID
-    deleteVideo: builder.mutation<{ message: string }, string>({
-      query: (id) => ({
-        url: `videos/${id}`,
-        method: "DELETE",
+    getAllVideos: builder.query<IVideo[], void>({
+      query: () => ({
+        url: "/videos",
+        method: "GET",
       }),
     }),
   }),
 });
 
-export const { useFetchVideosQuery, useFetchVideoByIdQuery, useAddVideoMutation, useUpdateVideoMutation, useDeleteVideoMutation } = apiVideo;
+export const { useUploadVideoMutation,useGetAllVideosQuery } = apiVideo;

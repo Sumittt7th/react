@@ -46,7 +46,36 @@ export const api = createApi({
         method: "POST",
       }),
     }),
+
+    getAllUsers: builder.query<
+      { name: string; email: string; subscription: boolean }[],
+      void
+    >({
+      query: () => "users/",
+    }),
+
+    // Fetch user by ID
+    getUserById: builder.query<
+      { name: string; email: string; subscription: boolean },
+      string
+    >({
+      query: (id) => `users/${id}`,
+    }),
+    editUser: builder.mutation({
+      query: ({ id, ...data }) => ({
+        url: `/users/${id}`,
+        method: "PATCH",
+        body: data,
+      }),
+    }),
   }),
 });
 
-export const { useLoginMutation, useSignupMutation, useLogoutMutation } = api;
+export const {
+  useLoginMutation,
+  useSignupMutation,
+  useLogoutMutation,
+  useGetAllUsersQuery,
+  useGetUserByIdQuery,
+  useEditUserMutation,
+} = api;

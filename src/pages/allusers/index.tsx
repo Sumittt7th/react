@@ -1,28 +1,37 @@
-import React from 'react';
-import { Typography, Box, List, ListItem, ListItemText } from '@mui/material';
+import React from "react";
+import { useGetAllUsersQuery } from "../../services/auth.api"; // Replace with your actual API file
 
 const AllUsers: React.FC = () => {
-  // Sample data for users
-  const users = [
-    { id: 1, name: 'John Doe', email: 'john@example.com' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-    // Add more users as needed
-  ];
+  const { data, error, isLoading } = useGetAllUsersQuery();
+  
+
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: Unable to fetch users</div>;
+
+  // Validate data
+  const users = Array.isArray(data?.data) ? data.data : [];
+
+  console.log("Users", users);
+
+  if (users.length === 0) {
+    return <div>No users available</div>;
+  }
 
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom>
-        All Users
-      </Typography>
-      <List>
+    <div>
+      <h1>All Users</h1>
+      <ul>
         {users.map((user) => (
-          <ListItem key={user.id}>
-            <ListItemText primary={user.name} secondary={user.email} />
-          </ListItem>
+          <li key={user.email} className="mb-4">
+            <h2 className="text-xl font-bold">{user.name}</h2>
+            <p>{user.email}</p>
+            <span>
+              Subscription: {user.subscription ? "Active" : "Inactive"}
+            </span>
+          </li>
         ))}
-      </List>
-     
-    </Box>
+      </ul>
+    </div>
   );
 };
 
