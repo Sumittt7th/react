@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { clearTokens } from '../../utils/auth';
 
 // Define a type for the slice state
 interface AuthState {
@@ -60,9 +61,23 @@ export const authSlice = createSlice({
       localStorage.removeItem("role");
       localStorage.removeItem("user");
     },
+    logout: (state) => {
+      // Reset the tokens and other state fields
+      state.accessToken = "";
+      state.refreshToken = "";
+      state.isAuthenticated = false;
+      state.role = "";
+      state.user = {};
+      // Remove data from localStorage
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("role");
+      localStorage.removeItem("user");
+      clearTokens();
+    },
   },
 });
 
-export const { setLoading, setTokens, resetTokens } = authSlice.actions;
+export const { setLoading, setTokens, resetTokens, logout } = authSlice.actions;
 
 export default authSlice.reducer;

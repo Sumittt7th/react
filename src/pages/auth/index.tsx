@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Button, TextField, Typography, Paper } from "@mui/material";
-import { useLoginMutation, useSignupMutation } from "../../services/auth.api";
+import { useLoginMutation, useSignUpMutation } from "../../services/auth.api";
 import { useAppDispatch } from "../../store/store";
 import { setTokens } from "../../store/reducers/authReducer";
 import { saveTokens } from "../../utils/auth";
@@ -22,7 +22,7 @@ const AuthPage: React.FC = () => {
   const { register, handleSubmit } = useForm<FormData>();
 
   const [login, { isLoading: loginLoading }] = useLoginMutation();
-  const [signup, { isLoading: signupLoading }] = useSignupMutation();
+  const [signup, { isLoading: signupLoading }] = useSignUpMutation();
 
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     if (activeForm === 'login') {
