@@ -43,7 +43,7 @@ const EditProfile: React.FC = () => {
     try {
       await updateUser({ id: userId, ...data }).unwrap();
       toast.success("Profile updated successfully");
-      navigate(`/${role.toLowerCase()}/profile`);
+      navigate("/profile");
       window.location.reload(); // Redirect back to the profile page
     } catch (error) {
       console.error("Error updating profile:", error);

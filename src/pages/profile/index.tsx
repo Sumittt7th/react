@@ -76,7 +76,7 @@ const UserProfile: React.FC = () => {
           variant="contained"
           color="primary"
           sx={{ mt: 2 }}
-          onClick={() => navigate(`/${role.toLowerCase()}/editUser`)}
+          onClick={() => navigate(`/editUser`)}
         >
           Edit Profile
         </Button>

@@ -1,12 +1,14 @@
 import { useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { setTokens } from "../src/store/reducers/authReducer"; // Adjust the import path
+import { useAppSelector } from "./store/store";
+import { setTokens } from "./store/reducers/authReducer";
 import AuthPage from "./pages/auth";
 import HomePage from "./pages/homepage";
-import AdminDashboard from "./components/AdminDashboard";
-import UserDashboard from "./components/UserDashboard";
+import Layout from "../src/layouts/layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminDashboard from './components/AdminDashboard';
+import UserDashboard from './components/UserDashboard';
 import VideoUploadForm from "./pages/uploadVideo";
 import AllUsers from "./pages/allusers";
 import AllVideos from "./pages/allvideo";
@@ -16,55 +18,51 @@ import EditUser from "./pages/editUser";
 
 function App() {
   const dispatch = useDispatch();
+  const { role } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
-    // Check localStorage for tokens and user data
     const accessToken = localStorage.getItem("accessToken");
     const refreshToken = localStorage.getItem("refreshToken");
     const role = localStorage.getItem("role");
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     if (accessToken && refreshToken && role) {
-      // Dispatch the setTokens action to store the data in Redux
       dispatch(setTokens({ accessToken, refreshToken, role, user }));
     }
   }, [dispatch]);
 
   return (
     <Routes>
-      <Route>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<AuthPage />} />
-        <Route path="/signup" element={<AuthPage />} />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="users" element={<AllUsers />} />
-          <Route path="upload" element={<VideoUploadForm />} />
-          <Route path="videos" element={<AllVideos />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="analytics" element={<Analytics />} />
-          <Route path="editUser" element={<EditUser />} />
-        </Route>
-        <Route
-          path="/user"
-          element={
-            <ProtectedRoute allowedRoles={["USER"]}>
-              <UserDashboard />
-            </ProtectedRoute>
-          }
-        >
-          <Route path="videos" element={<AllVideos />} />
-          <Route path="profile" element={<Profile />} />
-          <Route path="analytics" element={<Analytics />} />
-          <Route path="editUser" element={<EditUser />} />
-        </Route>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={<AuthPage />} />
+      <Route path="/signup" element={<AuthPage />} />
+
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute allowedRoles={["ADMIN", "USER"]}>
+            <Layout role={role} />
+          </ProtectedRoute>
+        }
+      >
+        {/* Default Admin and User Dashboards */}
+        <Route index element={<Navigate to={role === "ADMIN" ? "/admin" : "/user"} replace />} />
+        <Route path="admin" element={<AdminDashboard />} />
+        <Route path="user" element={<UserDashboard />} />
+
+        {/* Shared Routes */}
+        <Route path="profile" element={<Profile />} />
+        <Route path="videos" element={<AllVideos />} />
+        <Route path="analytics" element={<Analytics />} />
+        <Route path="editUser" element={<EditUser />} />
+
+        {/* Admin-Specific Route */}
+        <Route path="users" element={<AllUsers />} />
+        <Route path="upload" element={<VideoUploadForm />} />
       </Route>
+
+      {/* Catch-All Route */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
