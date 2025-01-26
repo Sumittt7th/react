@@ -19,7 +19,14 @@ const initialState: AuthState = {
   isAuthenticated: !!localStorage.getItem("accessToken"), // Check if accessToken exists in localStorage
   loading: true,
   role: localStorage.getItem("role") || "",
-  user: JSON.parse(localStorage.getItem("user") || "{}"), // Retrieve user data from localStorage
+  user: (() => {
+    try {
+      const user = localStorage.getItem("user");
+      return user ? JSON.parse(user) : {};
+    } catch {
+      return {};
+    }
+  })(),
 };
 
 export const authSlice = createSlice({
@@ -63,14 +70,12 @@ export const authSlice = createSlice({
     },
     logout: (state) => {
       // Reset the tokens and other state fields
-      state.accessToken = "";
-      state.refreshToken = "";
+      
       state.isAuthenticated = false;
       state.role = "";
       state.user = {};
       // Remove data from localStorage
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
+  
       localStorage.removeItem("role");
       localStorage.removeItem("user");
       clearTokens();

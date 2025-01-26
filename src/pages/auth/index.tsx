@@ -28,6 +28,7 @@ const AuthPage: React.FC = () => {
     if (activeForm === 'login') {
       try {
         const response = await login({ email: data.email, password: data.password }).unwrap();
+        console.log(response.data);
         dispatch(setTokens(response.data));
         saveTokens(response.data.accessToken, response.data.refreshToken, response.data.role);
 

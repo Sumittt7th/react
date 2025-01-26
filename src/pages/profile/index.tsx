@@ -1,13 +1,13 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store"; // Adjust to your store file's path
-import { useGetUserByIdQuery } from "../../services/auth.api";
+import { useGetUserByIdQuery } from "../../services/user.api";
 import { Container, Typography, Paper, Box,Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const UserProfile: React.FC = () => {
   // Retrieve the user ID from the Redux store
-  const { _id: userId, role } = useSelector(
+  const { _id: userId } = useSelector(
     (state: RootState) => state.auth.user
   );
 

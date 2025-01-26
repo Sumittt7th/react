@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAccessToken } from "../utils/auth";
+import { baseQueryWithReauth } from "./api";
 
 export interface IVideo {
   _id: string;
@@ -18,16 +18,7 @@ export interface IVideo {
 
 export const apiVideo = createApi({
   reducerPath: "videoApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:5000/api", // Update with your backend URL
-    prepareHeaders: (headers) => {
-      const token = getAccessToken(); // Retrieve token
-      if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     uploadVideo: builder.mutation<any, { data: IVideo; file: File }>({
       query: ({ data, file }) => {

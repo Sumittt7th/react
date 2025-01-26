@@ -4,7 +4,7 @@ import { useAppSelector, useAppDispatch } from '../../store/store';
 import { resetTokens } from '../../store/reducers/authReducer'; 
 import { clearTokens } from '../../utils/auth'; 
 import { useNavigate } from 'react-router-dom';
-import { useLogoutMutation } from '../../services/auth.api'; 
+import { useLogoutMutation } from '../../services/user.api'; 
 import { toast } from 'react-toastify'; 
 
 const Navbar: React.FC = () => {

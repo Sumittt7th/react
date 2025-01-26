@@ -5,7 +5,7 @@ import * as yup from "yup";
 import { Container, Typography, TextField, Button, Paper } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { useEditUserMutation } from "../../services/auth.api"; // Define this API
+import { useEditUserMutation } from "../../services/user.api"; // Define this API
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

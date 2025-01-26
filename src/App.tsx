@@ -15,6 +15,7 @@ import AllVideos from "./pages/allvideo";
 import Profile from "./pages/profile";
 import Analytics from "./pages/analytics";
 import EditUser from "./pages/editUser";
+import NotFoundPage from "./pages/errorPage";
 
 function App() {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ function App() {
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<AuthPage />} />
       <Route path="/signup" element={<AuthPage />} />
+      <Route path="*" element={<NotFoundPage />} />
 
       <Route
         path="/"
@@ -46,7 +48,12 @@ function App() {
         }
       >
         {/* Default Admin and User Dashboards */}
-        <Route index element={<Navigate to={role === "ADMIN" ? "/admin" : "/user"} replace />} />
+        <Route
+          index
+          element={
+            <Navigate to={role === "ADMIN" ? "/admin" : "/user"} replace />
+          }
+        />
         <Route path="admin" element={<AdminDashboard />} />
         <Route path="user" element={<UserDashboard />} />
 
@@ -60,9 +67,6 @@ function App() {
         <Route path="users" element={<AllUsers />} />
         <Route path="upload" element={<VideoUploadForm />} />
       </Route>
-
-      {/* Catch-All Route */}
-      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import { useGetAllUsersQuery } from "../../services/auth.api"; // Replace with your actual API file
+import { useGetAllUsersQuery } from "../../services/user.api"; // Replace with your actual API file
 
 const AllUsers: React.FC = () => {
   const { data, error, isLoading } = useGetAllUsersQuery();
